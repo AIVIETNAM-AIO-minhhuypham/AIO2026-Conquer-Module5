@@ -1,0 +1,90 @@
+{
+  "env": {
+    "python": "3.13.13",
+    "torch": "2.13.0+cu130",
+    "torchvision": "0.28.0+cu130",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "device": "cuda",
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "gpu_mem_gb": 8.0
+  },
+  "batch_size": 128,
+  "results": [
+    {
+      "model": "vit_p4",
+      "aug": "basic",
+      "n_params": 2693578,
+      "steps_measured": 200,
+      "steps_per_s": 52.568010388778674,
+      "train_img_per_s": 6728.70532976367,
+      "infer_img_per_s": 27547.594667551883,
+      "num_workers": 8,
+      "peak_mem_mb": 595.6
+    },
+    {
+      "model": "vit_p4",
+      "aug": "strong",
+      "n_params": 2693578,
+      "steps_measured": 200,
+      "steps_per_s": 51.068678486598834,
+      "train_img_per_s": 6536.790846284651,
+      "infer_img_per_s": 26656.655611876646,
+      "num_workers": 8,
+      "peak_mem_mb": 596.2
+    },
+    {
+      "model": "vit_p8",
+      "aug": "basic",
+      "n_params": 2712010,
+      "steps_measured": 200,
+      "steps_per_s": 57.743036615582945,
+      "train_img_per_s": 7391.108686794617,
+      "infer_img_per_s": 118385.41239081575,
+      "num_workers": 8,
+      "peak_mem_mb": 333.3
+    },
+    {
+      "model": "vit_p8",
+      "aug": "strong",
+      "n_params": 2712010,
+      "steps_measured": 200,
+      "steps_per_s": 51.5543268670451,
+      "train_img_per_s": 6598.953838981773,
+      "infer_img_per_s": 117657.0250588203,
+      "num_workers": 8,
+      "peak_mem_mb": 333.4
+    },
+    {
+      "model": "resnet18_w05",
+      "aug": "basic",
+      "n_params": 2797610,
+      "steps_measured": 200,
+      "steps_per_s": 60.95011291163751,
+      "train_img_per_s": 7801.614452689601,
+      "infer_img_per_s": 34402.50193359478,
+      "num_workers": 8,
+      "peak_mem_mb": 432.5
+    },
+    {
+      "model": "resnet18_w05",
+      "aug": "strong",
+      "n_params": 2797610,
+      "steps_measured": 200,
+      "steps_per_s": 56.51893972295199,
+      "train_img_per_s": 7234.424284537855,
+      "infer_img_per_s": 34089.1194129884,
+      "num_workers": 8,
+      "peak_mem_mb": 426.8
+    }
+  ],
+  "steps_main": 30000,
+  "steps_sweep": 10000,
+  "estimated_gpu_hours": {
+    "lr_sweep": 0.33,
+    "pilot10": 0.64,
+    "tier1": 3.82,
+    "tier2": 1.02,
+    "tier3": 1.91,
+    "total": 7.71
+  }
+}

@@ -1,0 +1,322 @@
+
+===== 2026-10-30 10:46:22 | python main.py sanity =====
+[data] train pool 45000 | val 5000 | test 10000 | device cuda | 2.7s
+[sanity] pool/val disjoint: True | val per class: [500, 500, 500, 500, 500, 500, 500, 500, 500, 500]
+  seed0: {'10%': 4500, '30%': 13500, '100%': 45000} | nested: True | no val overlap: True
+  seed1: {'10%': 4500, '30%': 13500, '100%': 45000} | nested: True | no val overlap: True
+  seed2: {'10%': 4500, '30%': 13500, '100%': 45000} | nested: True | no val overlap: True
+  seed3: {'10%': 4500, '30%': 13500, '100%': 45000} | nested: True | no val overlap: True
+  vit_p4: 2,693,578 params | logits [4, 10] | tokens [4, 65, 192]
+  vit_p8: 2,712,010 params | logits [4, 10] | tokens [4, 17, 192]
+  resnet18_w05: 2,797,610 params | logits [4, 10]
+  overfit 256 imgs, 300 steps - vit_p4: loss 2.416 -> 0.2105, acc 0.914 -> FAIL
+  overfit 256 imgs, 300 steps - vit_p8: loss 2.369 -> 0.0049, acc 1.000 -> PASS
+  overfit 256 imgs, 300 steps - resnet18_w05: loss 2.384 -> 0.0004, acc 1.000 -> PASS
+
+===== 2026-10-30 10:46:42 | python main.py overfit --overfit-steps 1500 =====
+[data] train pool 45000 | val 5000 | test 10000 | device cuda | 2.5s
+  overfit 256 imgs, 1500 steps - vit_p4: loss 2.416 -> 0.0002, acc 1.000 -> PASS
+  overfit 256 imgs, 1500 steps - vit_p8: loss 2.369 -> 0.0002, acc 1.000 -> PASS
+  overfit 256 imgs, 1500 steps - resnet18_w05: loss 2.384 -> 0.0000, acc 1.000 -> PASS
+
+===== 2026-10-30 10:47:37 | python main.py bench =====
+[data] train pool 45000 | val 5000 | test 10000 | device cuda | 2.6s
+  vit_p4        basic  |   52.6 steps/s |    6729 img/s train |    27548 img/s infer | 595.6 MB
+  vit_p4        strong |   51.1 steps/s |    6537 img/s train |    26657 img/s infer | 596.2 MB
+  vit_p8        basic  |   57.7 steps/s |    7391 img/s train |   118385 img/s infer | 333.3 MB
+  vit_p8        strong |   51.6 steps/s |    6599 img/s train |   117657 img/s infer | 333.4 MB
+  resnet18_w05  basic  |   61.0 steps/s |    7802 img/s train |    34403 img/s infer | 432.5 MB
+  resnet18_w05  strong |   56.5 steps/s |    7234 img/s train |    34089 img/s infer | 426.8 MB
+estimated GPU hours: {'lr_sweep': 0.33, 'pilot10': 0.64, 'tier1': 3.82, 'tier2': 1.02, 'tier3': 1.91, 'total': 7.71}
+
+===== 2026-10-30 10:48:39 | python main.py queue --plan lr_sweep =====
+[data] train pool 45000 | val 5000 | test 10000 | device cuda | 2.6s
+[queue] lr_sweep: 6 runs
+--- 1/6 | elapsed 0.0 min ---
+[run] lr_sweep__vit_p4__strong__f100__s0__lr0.0005__st10000 | 45000 train imgs | 2,693,578 params | 10000 steps | amp=torch.bfloat16 | workers=8
+  step    500 | ep    1.42 | train_loss 2.1668 | val_loss 1.7881 | val_acc 0.3368 | 12s
+  step   1000 | ep    2.84 | train_loss 2.0227 | val_loss 1.5249 | val_acc 0.4536 | 21s
+  step   1500 | ep    4.27 | train_loss 1.9498 | val_loss 1.4640 | val_acc 0.4860 | 30s
+  step   2000 | ep    5.69 | train_loss 1.9350 | val_loss 1.3419 | val_acc 0.5440 | 39s
+  step   2500 | ep    7.11 | train_loss 1.8232 | val_loss 1.3451 | val_acc 0.5582 | 49s
+  step   3000 | ep    8.53 | train_loss 1.8957 | val_loss 1.2630 | val_acc 0.5502 | 58s
+  step   3500 | ep    9.96 | train_loss 1.7047 | val_loss 1.1945 | val_acc 0.5900 | 67s
+  step   4000 | ep   11.38 | train_loss 1.7675 | val_loss 1.1090 | val_acc 0.6254 | 76s
+  step   4500 | ep    12.8 | train_loss 1.6763 | val_loss 1.0991 | val_acc 0.6326 | 85s
+  step   5000 | ep   14.22 | train_loss 1.7818 | val_loss 1.0816 | val_acc 0.6346 | 94s
+  step   5500 | ep   15.64 | train_loss 1.7095 | val_loss 0.9954 | val_acc 0.6678 | 103s
+  step   6000 | ep   17.07 | train_loss 1.7523 | val_loss 1.0049 | val_acc 0.6736 | 112s
+  step   6500 | ep   18.49 | train_loss 1.6750 | val_loss 0.9261 | val_acc 0.6924 | 121s
+  step   7000 | ep   19.91 | train_loss 1.7432 | val_loss 0.9062 | val_acc 0.7046 | 130s
+  step   7500 | ep   21.33 | train_loss 1.5294 | val_loss 0.8823 | val_acc 0.7106 | 140s
+  step   8000 | ep   22.76 | train_loss 1.5717 | val_loss 0.8622 | val_acc 0.7190 | 149s
+  step   8500 | ep   24.18 | train_loss 1.5137 | val_loss 0.8508 | val_acc 0.7238 | 158s
+  step   9000 | ep    25.6 | train_loss 1.5680 | val_loss 0.8340 | val_acc 0.7308 | 167s
+  step   9500 | ep   27.02 | train_loss 1.6101 | val_loss 0.8254 | val_acc 0.7354 | 176s
+  step  10000 | ep   28.44 | train_loss 1.4950 | val_loss 0.8280 | val_acc 0.7358 | 185s
+[done] lr_sweep__vit_p4__strong__f100__s0__lr0.0005__st10000 | best val_acc 0.7358 @ step 10000
+--- 2/6 | elapsed 3.2 min ---
+[run] lr_sweep__vit_p4__strong__f100__s0__lr0.001__st10000 | 45000 train imgs | 2,693,578 params | 10000 steps | amp=torch.bfloat16 | workers=8
+  step    500 | ep    1.42 | train_loss 2.1606 | val_loss 1.7826 | val_acc 0.3364 | 13s
+  step   1000 | ep    2.84 | train_loss 2.0324 | val_loss 1.6007 | val_acc 0.4216 | 22s
+  step   1500 | ep    4.27 | train_loss 1.9850 | val_loss 1.5027 | val_acc 0.4780 | 31s
+  step   2000 | ep    5.69 | train_loss 1.9659 | val_loss 1.4264 | val_acc 0.5168 | 40s
+  step   2500 | ep    7.11 | train_loss 1.8695 | val_loss 1.4517 | val_acc 0.5330 | 53s
+  step   3000 | ep    8.53 | train_loss 1.9337 | val_loss 1.3405 | val_acc 0.5256 | 64s
+  step   3500 | ep    9.96 | train_loss 1.7530 | val_loss 1.2236 | val_acc 0.5770 | 75s
+  step   4000 | ep   11.38 | train_loss 1.7961 | val_loss 1.1368 | val_acc 0.6204 | 87s
+  step   4500 | ep    12.8 | train_loss 1.7006 | val_loss 1.1410 | val_acc 0.6182 | 97s
+  step   5000 | ep   14.22 | train_loss 1.7879 | val_loss 1.0985 | val_acc 0.6310 | 107s
+  step   5500 | ep   15.64 | train_loss 1.7107 | val_loss 0.9981 | val_acc 0.6740 | 117s
+  step   6000 | ep   17.07 | train_loss 1.7666 | val_loss 0.9896 | val_acc 0.6846 | 127s
+  step   6500 | ep   18.49 | train_loss 1.6912 | val_loss 0.9259 | val_acc 0.6974 | 137s
+  step   7000 | ep   19.91 | train_loss 1.7381 | val_loss 0.9000 | val_acc 0.7060 | 147s
+  step   7500 | ep   21.33 | train_loss 1.5348 | val_loss 0.8743 | val_acc 0.7180 | 157s
+  step   8000 | ep   22.76 | train_loss 1.5686 | val_loss 0.8462 | val_acc 0.7216 | 166s
+  step   8500 | ep   24.18 | train_loss 1.5090 | val_loss 0.8346 | val_acc 0.7340 | 176s
+  step   9000 | ep    25.6 | train_loss 1.5703 | val_loss 0.8178 | val_acc 0.7378 | 187s
+  step   9500 | ep   27.02 | train_loss 1.5997 | val_loss 0.8080 | val_acc 0.7424 | 197s
+  step  10000 | ep   28.44 | train_loss 1.4990 | val_loss 0.8121 | val_acc 0.7438 | 207s
+[done] lr_sweep__vit_p4__strong__f100__s0__lr0.001__st10000 | best val_acc 0.7438 @ step 10000
+--- 3/6 | elapsed 6.8 min ---
+[run] lr_sweep__vit_p4__strong__f100__s0__lr0.002__st10000 | 45000 train imgs | 2,693,578 params | 10000 steps | amp=torch.bfloat16 | workers=8
+  step    500 | ep    1.42 | train_loss 2.1666 | val_loss 1.8994 | val_acc 0.2652 | 16s
+  step   1000 | ep    2.84 | train_loss 2.1256 | val_loss 1.7815 | val_acc 0.3230 | 25s
+  step   1500 | ep    4.27 | train_loss 2.1010 | val_loss 1.7547 | val_acc 0.3480 | 35s
+  step   2000 | ep    5.69 | train_loss 2.0854 | val_loss 1.7054 | val_acc 0.3968 | 45s
+  step   2500 | ep    7.11 | train_loss 2.0145 | val_loss 1.6893 | val_acc 0.3982 | 55s
+  step   3000 | ep    8.53 | train_loss 2.0206 | val_loss 1.5566 | val_acc 0.4276 | 65s
+  step   3500 | ep    9.96 | train_loss 1.9321 | val_loss 1.5572 | val_acc 0.4412 | 75s
+  step   4000 | ep   11.38 | train_loss 1.9711 | val_loss 1.5229 | val_acc 0.4582 | 85s
+  step   4500 | ep    12.8 | train_loss 1.9231 | val_loss 1.5257 | val_acc 0.4522 | 95s
+  step   5000 | ep   14.22 | train_loss 1.9850 | val_loss 1.4867 | val_acc 0.4762 | 105s
+  step   5500 | ep   15.64 | train_loss 1.9245 | val_loss 1.4558 | val_acc 0.4860 | 115s
+  step   6000 | ep   17.07 | train_loss 1.9854 | val_loss 1.4349 | val_acc 0.4910 | 124s
+  step   6500 | ep   18.49 | train_loss 1.8899 | val_loss 1.3722 | val_acc 0.5138 | 134s
+  step   7000 | ep   19.91 | train_loss 1.9513 | val_loss 1.3512 | val_acc 0.5232 | 144s
+  step   7500 | ep   21.33 | train_loss 1.8223 | val_loss 1.3408 | val_acc 0.5242 | 154s
+  step   8000 | ep   22.76 | train_loss 1.8479 | val_loss 1.3037 | val_acc 0.5432 | 164s
+  step   8500 | ep   24.18 | train_loss 1.7891 | val_loss 1.2877 | val_acc 0.5414 | 173s
+  step   9000 | ep    25.6 | train_loss 1.8307 | val_loss 1.2856 | val_acc 0.5462 | 183s
+  step   9500 | ep   27.02 | train_loss 1.8526 | val_loss 1.2719 | val_acc 0.5488 | 193s
+  step  10000 | ep   28.44 | train_loss 1.7889 | val_loss 1.2758 | val_acc 0.5488 | 203s
+[done] lr_sweep__vit_p4__strong__f100__s0__lr0.002__st10000 | best val_acc 0.5488 @ step 9500
+--- 4/6 | elapsed 10.3 min ---
+[run] lr_sweep__resnet18_w05__strong__f100__s0__lr0.0005__st10000 | 45000 train imgs | 2,797,610 params | 10000 steps | amp=torch.bfloat16 | workers=8
+  step    500 | ep    1.42 | train_loss 2.0571 | val_loss 1.4975 | val_acc 0.4698 | 16s
+  step   1000 | ep    2.84 | train_loss 1.7479 | val_loss 1.1319 | val_acc 0.6022 | 25s
+  step   1500 | ep    4.27 | train_loss 1.8037 | val_loss 0.9753 | val_acc 0.6850 | 34s
+  step   2000 | ep    5.69 | train_loss 1.5511 | val_loss 0.9073 | val_acc 0.6954 | 43s
+  step   2500 | ep    7.11 | train_loss 1.5801 | val_loss 0.8146 | val_acc 0.7400 | 52s
+  step   3000 | ep    8.53 | train_loss 1.6547 | val_loss 0.7575 | val_acc 0.7618 | 61s
+  step   3500 | ep    9.96 | train_loss 1.2746 | val_loss 0.7429 | val_acc 0.7802 | 70s
+  step   4000 | ep   11.38 | train_loss 1.3507 | val_loss 0.6464 | val_acc 0.8074 | 79s
+  step   4500 | ep    12.8 | train_loss 1.2083 | val_loss 0.6941 | val_acc 0.8042 | 88s
+  step   5000 | ep   14.22 | train_loss 1.3406 | val_loss 0.5888 | val_acc 0.8268 | 97s
+  step   5500 | ep   15.64 | train_loss 1.4070 | val_loss 0.5959 | val_acc 0.8318 | 106s
+  step   6000 | ep   17.07 | train_loss 1.3322 | val_loss 0.5667 | val_acc 0.8444 | 114s
+  step   6500 | ep   18.49 | train_loss 1.1536 | val_loss 0.5789 | val_acc 0.8480 | 123s
+  step   7000 | ep   19.91 | train_loss 1.5103 | val_loss 0.5584 | val_acc 0.8516 | 132s
+  step   7500 | ep   21.33 | train_loss 1.0807 | val_loss 0.5497 | val_acc 0.8586 | 141s
+  step   8000 | ep   22.76 | train_loss 1.1223 | val_loss 0.5204 | val_acc 0.8698 | 150s
+  step   8500 | ep   24.18 | train_loss 1.3687 | val_loss 0.5096 | val_acc 0.8680 | 158s
+  step   9000 | ep    25.6 | train_loss 1.1353 | val_loss 0.5100 | val_acc 0.8686 | 167s
+  step   9500 | ep   27.02 | train_loss 1.0727 | val_loss 0.5068 | val_acc 0.8694 | 176s
+  step  10000 | ep   28.44 | train_loss 1.3034 | val_loss 0.5040 | val_acc 0.8698 | 185s
+[done] lr_sweep__resnet18_w05__strong__f100__s0__lr0.0005__st10000 | best val_acc 0.8698 @ step 8000
+--- 5/6 | elapsed 13.5 min ---
+[run] lr_sweep__resnet18_w05__strong__f100__s0__lr0.001__st10000 | 45000 train imgs | 2,797,610 params | 10000 steps | amp=torch.bfloat16 | workers=8
+  step    500 | ep    1.42 | train_loss 2.0269 | val_loss 1.4025 | val_acc 0.5020 | 14s
+  step   1000 | ep    2.84 | train_loss 1.7034 | val_loss 1.1443 | val_acc 0.6038 | 22s
+  step   1500 | ep    4.27 | train_loss 1.7774 | val_loss 0.9504 | val_acc 0.6960 | 31s
+  step   2000 | ep    5.69 | train_loss 1.5126 | val_loss 0.8562 | val_acc 0.7234 | 40s
+  step   2500 | ep    7.11 | train_loss 1.5489 | val_loss 0.8852 | val_acc 0.7168 | 49s
+  step   3000 | ep    8.53 | train_loss 1.6133 | val_loss 0.7273 | val_acc 0.7778 | 57s
+  step   3500 | ep    9.96 | train_loss 1.2195 | val_loss 0.6832 | val_acc 0.8004 | 66s
+  step   4000 | ep   11.38 | train_loss 1.2946 | val_loss 0.6113 | val_acc 0.8230 | 75s
+  step   4500 | ep    12.8 | train_loss 1.1467 | val_loss 0.6404 | val_acc 0.8330 | 83s
+  step   5000 | ep   14.22 | train_loss 1.2966 | val_loss 0.5340 | val_acc 0.8538 | 92s
+  step   5500 | ep   15.64 | train_loss 1.3570 | val_loss 0.5408 | val_acc 0.8544 | 101s
+  step   6000 | ep   17.07 | train_loss 1.2689 | val_loss 0.4988 | val_acc 0.8640 | 110s
+  step   6500 | ep   18.49 | train_loss 1.0910 | val_loss 0.5052 | val_acc 0.8740 | 118s
+  step   7000 | ep   19.91 | train_loss 1.4532 | val_loss 0.4957 | val_acc 0.8742 | 127s
+  step   7500 | ep   21.33 | train_loss 1.0050 | val_loss 0.4796 | val_acc 0.8836 | 136s
+  step   8000 | ep   22.76 | train_loss 1.0470 | val_loss 0.4597 | val_acc 0.8870 | 145s
+  step   8500 | ep   24.18 | train_loss 1.3014 | val_loss 0.4265 | val_acc 0.8902 | 154s
+  step   9000 | ep    25.6 | train_loss 1.0758 | val_loss 0.4369 | val_acc 0.8914 | 163s
+  step   9500 | ep   27.02 | train_loss 1.0038 | val_loss 0.4394 | val_acc 0.8912 | 171s
+  step  10000 | ep   28.44 | train_loss 1.2405 | val_loss 0.4338 | val_acc 0.8916 | 180s
+[done] lr_sweep__resnet18_w05__strong__f100__s0__lr0.001__st10000 | best val_acc 0.8916 @ step 10000
+--- 6/6 | elapsed 16.6 min ---
+[run] lr_sweep__resnet18_w05__strong__f100__s0__lr0.002__st10000 | 45000 train imgs | 2,797,610 params | 10000 steps | amp=torch.bfloat16 | workers=8
+  step    500 | ep    1.42 | train_loss 2.0114 | val_loss 1.5351 | val_acc 0.4634 | 13s
+  step   1000 | ep    2.84 | train_loss 1.6755 | val_loss 1.1168 | val_acc 0.6130 | 22s
+  step   1500 | ep    4.27 | train_loss 1.7661 | val_loss 0.9359 | val_acc 0.7114 | 31s
+  step   2000 | ep    5.69 | train_loss 1.4886 | val_loss 0.8378 | val_acc 0.7396 | 40s
+  step   2500 | ep    7.11 | train_loss 1.5125 | val_loss 0.8553 | val_acc 0.7388 | 48s
+  step   3000 | ep    8.53 | train_loss 1.5948 | val_loss 0.7325 | val_acc 0.7670 | 57s
+  step   3500 | ep    9.96 | train_loss 1.2093 | val_loss 0.6912 | val_acc 0.7956 | 65s
+  step   4000 | ep   11.38 | train_loss 1.2766 | val_loss 0.6085 | val_acc 0.8280 | 74s
+  step   4500 | ep    12.8 | train_loss 1.1249 | val_loss 0.6495 | val_acc 0.8236 | 82s
+  step   5000 | ep   14.22 | train_loss 1.2695 | val_loss 0.5219 | val_acc 0.8522 | 91s
+  step   5500 | ep   15.64 | train_loss 1.3263 | val_loss 0.5486 | val_acc 0.8534 | 99s
+  step   6000 | ep   17.07 | train_loss 1.2257 | val_loss 0.4668 | val_acc 0.8726 | 108s
+  step   6500 | ep   18.49 | train_loss 1.0747 | val_loss 0.4797 | val_acc 0.8828 | 117s
+  step   7000 | ep   19.91 | train_loss 1.4314 | val_loss 0.4691 | val_acc 0.8828 | 125s
+  step   7500 | ep   21.33 | train_loss 0.9758 | val_loss 0.4439 | val_acc 0.8940 | 134s
+  step   8000 | ep   22.76 | train_loss 1.0093 | val_loss 0.4188 | val_acc 0.9002 | 143s
+  step   8500 | ep   24.18 | train_loss 1.2711 | val_loss 0.3845 | val_acc 0.9026 | 151s
+  step   9000 | ep    25.6 | train_loss 1.0515 | val_loss 0.4034 | val_acc 0.9048 | 160s
+  step   9500 | ep   27.02 | train_loss 0.9666 | val_loss 0.4048 | val_acc 0.9044 | 168s
+  step  10000 | ep   28.44 | train_loss 1.2020 | val_loss 0.3990 | val_acc 0.9048 | 177s
+[done] lr_sweep__resnet18_w05__strong__f100__s0__lr0.002__st10000 | best val_acc 0.9048 @ step 9000
+
+===== 2026-10-30 11:08:23 | python main.py queue --plan lr_sweep_ext =====
+[data] train pool 45000 | val 5000 | test 10000 | device cuda | 2.6s
+[queue] lr_sweep_ext: 1 runs
+--- 1/1 | elapsed 0.0 min ---
+[run] lr_sweep__resnet18_w05__strong__f100__s0__lr0.004__st10000 | 45000 train imgs | 2,797,610 params | 10000 steps | amp=torch.bfloat16 | workers=8
+  step    500 | ep    1.42 | train_loss 1.9931 | val_loss 1.4901 | val_acc 0.4770 | 14s
+  step   1000 | ep    2.84 | train_loss 1.6762 | val_loss 1.1217 | val_acc 0.6134 | 22s
+  step   1500 | ep    4.27 | train_loss 1.7398 | val_loss 0.9019 | val_acc 0.7198 | 31s
+  step   2000 | ep    5.69 | train_loss 1.4691 | val_loss 0.8631 | val_acc 0.7404 | 40s
+  step   2500 | ep    7.11 | train_loss 1.5107 | val_loss 0.7899 | val_acc 0.7670 | 48s
+  step   3000 | ep    8.53 | train_loss 1.5914 | val_loss 0.7137 | val_acc 0.7872 | 57s
+  step   3500 | ep    9.96 | train_loss 1.1916 | val_loss 0.6557 | val_acc 0.8110 | 65s
+  step   4000 | ep   11.38 | train_loss 1.2764 | val_loss 0.5823 | val_acc 0.8388 | 74s
+  step   4500 | ep    12.8 | train_loss 1.1095 | val_loss 0.6100 | val_acc 0.8362 | 83s
+  step   5000 | ep   14.22 | train_loss 1.2691 | val_loss 0.5422 | val_acc 0.8452 | 92s
+  step   5500 | ep   15.64 | train_loss 1.3381 | val_loss 0.5316 | val_acc 0.8644 | 100s
+  step   6000 | ep   17.07 | train_loss 1.2182 | val_loss 0.4527 | val_acc 0.8734 | 109s
+  step   6500 | ep   18.49 | train_loss 1.0727 | val_loss 0.4598 | val_acc 0.8842 | 118s
+  step   7000 | ep   19.91 | train_loss 1.4142 | val_loss 0.4670 | val_acc 0.8874 | 127s
+  step   7500 | ep   21.33 | train_loss 0.9761 | val_loss 0.4289 | val_acc 0.8962 | 135s
+  step   8000 | ep   22.76 | train_loss 0.9782 | val_loss 0.4067 | val_acc 0.9000 | 144s
+  step   8500 | ep   24.18 | train_loss 1.2609 | val_loss 0.3593 | val_acc 0.9092 | 152s
+  step   9000 | ep    25.6 | train_loss 1.0213 | val_loss 0.3832 | val_acc 0.9086 | 161s
+  step   9500 | ep   27.02 | train_loss 0.9432 | val_loss 0.3872 | val_acc 0.9082 | 169s
+  step  10000 | ep   28.44 | train_loss 1.1865 | val_loss 0.3800 | val_acc 0.9102 | 178s
+[done] lr_sweep__resnet18_w05__strong__f100__s0__lr0.004__st10000 | best val_acc 0.9102 @ step 10000
+
+===== 2026-10-30 11:11:34 | python main.py select-lr =====
+[warn] resnet18_w05: best lr 0.004 is on the edge of the grid [0.0005, 0.001, 0.002, 0.004]
+{
+  "chosen_lr": {
+    "vit_p4": 0.001,
+    "resnet18_w05": 0.004
+  },
+  "val_acc_by_lr": {
+    "vit_p4": {
+      "0.0005": 0.7357999682426453,
+      "0.001": 0.7437999844551086,
+      "0.002": 0.548799991607666
+    },
+    "resnet18_w05": {
+      "0.0005": 0.8697999715805054,
+      "0.001": 0.8915999531745911,
+      "0.002": 0.9047999978065491,
+      "0.004": 0.9101999998092651
+    }
+  }
+}
+
+===== 2026-10-30 11:11:37 | python main.py queue --plan pilot10 =====
+[data] train pool 45000 | val 5000 | test 10000 | device cuda | 2.6s
+[queue] pilot10: 4 runs
+--- 1/4 | elapsed 0.0 min ---
+[run] pilot10__vit_p4__basic__f010__s0__lr0.001__st30000 | 4500 train imgs | 2,693,578 params | 30000 steps | amp=torch.bfloat16 | workers=8
+  step   1500 | ep   42.67 | train_loss 1.5336 | val_loss 1.3156 | val_acc 0.5260 | 31s
+  step   3000 | ep   85.33 | train_loss 0.9459 | val_loss 1.4238 | val_acc 0.5664 | 58s
+  step   4500 | ep   128.0 | train_loss 0.3676 | val_loss 2.0276 | val_acc 0.5610 | 85s
+  step   6000 | ep  170.67 | train_loss 0.1496 | val_loss 2.3816 | val_acc 0.5646 | 112s
+  step   7500 | ep  213.33 | train_loss 0.1017 | val_loss 2.5427 | val_acc 0.5554 | 139s
+  step   9000 | ep   256.0 | train_loss 0.0578 | val_loss 2.6907 | val_acc 0.5512 | 166s
+  step  10500 | ep  298.67 | train_loss 0.0506 | val_loss 2.6355 | val_acc 0.5642 | 192s
+  step  12000 | ep  341.33 | train_loss 0.0249 | val_loss 2.7585 | val_acc 0.5706 | 220s
+  step  13500 | ep   384.0 | train_loss 0.0258 | val_loss 2.8603 | val_acc 0.5690 | 247s
+  step  15000 | ep  426.67 | train_loss 0.0191 | val_loss 2.9652 | val_acc 0.5676 | 274s
+  step  16500 | ep  469.33 | train_loss 0.0095 | val_loss 3.1205 | val_acc 0.5686 | 300s
+  step  18000 | ep   512.0 | train_loss 0.0066 | val_loss 3.0291 | val_acc 0.5764 | 327s
+  step  19500 | ep  554.67 | train_loss 0.0020 | val_loss 3.0963 | val_acc 0.5754 | 354s
+  step  21000 | ep  597.33 | train_loss 0.0020 | val_loss 3.0817 | val_acc 0.5850 | 381s
+  step  22500 | ep   640.0 | train_loss 0.0015 | val_loss 3.1489 | val_acc 0.5842 | 408s
+  step  24000 | ep  682.67 | train_loss 0.0000 | val_loss 3.1988 | val_acc 0.5820 | 434s
+  step  25500 | ep  725.33 | train_loss 0.0000 | val_loss 3.2251 | val_acc 0.5824 | 461s
+  step  27000 | ep   768.0 | train_loss 0.0000 | val_loss 3.2531 | val_acc 0.5842 | 487s
+  step  28500 | ep  810.67 | train_loss 0.0000 | val_loss 3.2723 | val_acc 0.5842 | 514s
+  step  30000 | ep  853.33 | train_loss 0.0000 | val_loss 3.2765 | val_acc 0.5844 | 540s
+[done] pilot10__vit_p4__basic__f010__s0__lr0.001__st30000 | best val_acc 0.5850 @ step 21000
+--- 2/4 | elapsed 9.1 min ---
+[run] pilot10__vit_p4__strong__f010__s0__lr0.001__st30000 | 4500 train imgs | 2,693,578 params | 30000 steps | amp=torch.bfloat16 | workers=8
+  step   1500 | ep   42.67 | train_loss 2.0495 | val_loss 1.4573 | val_acc 0.4950 | 37s
+  step   3000 | ep   85.33 | train_loss 1.9162 | val_loss 1.3593 | val_acc 0.5194 | 68s
+  step   4500 | ep   128.0 | train_loss 1.7350 | val_loss 1.2196 | val_acc 0.5846 | 99s
+  step   6000 | ep  170.67 | train_loss 1.7396 | val_loss 1.0933 | val_acc 0.6406 | 128s
+  step   7500 | ep  213.33 | train_loss 1.6388 | val_loss 0.9971 | val_acc 0.6666 | 158s
+  step   9000 | ep   256.0 | train_loss 1.4852 | val_loss 0.9718 | val_acc 0.6820 | 188s
+  step  10500 | ep  298.67 | train_loss 1.4470 | val_loss 0.9439 | val_acc 0.6888 | 218s
+  step  12000 | ep  341.33 | train_loss 1.3677 | val_loss 0.9534 | val_acc 0.6916 | 247s
+  step  13500 | ep   384.0 | train_loss 1.3354 | val_loss 0.9216 | val_acc 0.6996 | 277s
+  step  15000 | ep  426.67 | train_loss 1.1186 | val_loss 0.9209 | val_acc 0.7020 | 305s
+  step  16500 | ep  469.33 | train_loss 1.1942 | val_loss 0.8914 | val_acc 0.7188 | 334s
+  step  18000 | ep   512.0 | train_loss 1.2085 | val_loss 0.8993 | val_acc 0.7148 | 363s
+  step  19500 | ep  554.67 | train_loss 1.1719 | val_loss 0.8598 | val_acc 0.7284 | 393s
+  step  21000 | ep  597.33 | train_loss 1.0837 | val_loss 0.8791 | val_acc 0.7208 | 423s
+  step  22500 | ep   640.0 | train_loss 1.1197 | val_loss 0.8600 | val_acc 0.7328 | 452s
+  step  24000 | ep  682.67 | train_loss 0.9494 | val_loss 0.8423 | val_acc 0.7338 | 480s
+  step  25500 | ep  725.33 | train_loss 0.9778 | val_loss 0.8367 | val_acc 0.7320 | 509s
+  step  27000 | ep   768.0 | train_loss 1.1178 | val_loss 0.8306 | val_acc 0.7402 | 539s
+  step  28500 | ep  810.67 | train_loss 1.0131 | val_loss 0.8307 | val_acc 0.7390 | 569s
+  step  30000 | ep  853.33 | train_loss 0.9149 | val_loss 0.8289 | val_acc 0.7406 | 598s
+[done] pilot10__vit_p4__strong__f010__s0__lr0.001__st30000 | best val_acc 0.7406 @ step 30000
+--- 3/4 | elapsed 19.2 min ---
+[run] pilot10__resnet18_w05__basic__f010__s0__lr0.004__st30000 | 4500 train imgs | 2,797,610 params | 30000 steps | amp=torch.bfloat16 | workers=8
+  step   1500 | ep   42.67 | train_loss 0.9487 | val_loss 1.2871 | val_acc 0.6628 | 31s
+  step   3000 | ep   85.33 | train_loss 0.2281 | val_loss 1.1797 | val_acc 0.7618 | 55s
+  step   4500 | ep   128.0 | train_loss 0.0853 | val_loss 1.3049 | val_acc 0.7636 | 79s
+  step   6000 | ep  170.67 | train_loss 0.0572 | val_loss 1.3777 | val_acc 0.7524 | 102s
+  step   7500 | ep  213.33 | train_loss 0.0516 | val_loss 1.2775 | val_acc 0.7676 | 126s
+  step   9000 | ep   256.0 | train_loss 0.0500 | val_loss 1.3635 | val_acc 0.7712 | 150s
+  step  10500 | ep  298.67 | train_loss 0.0348 | val_loss 1.5348 | val_acc 0.7668 | 174s
+  step  12000 | ep  341.33 | train_loss 0.0341 | val_loss 1.4510 | val_acc 0.7668 | 198s
+  step  13500 | ep   384.0 | train_loss 0.0268 | val_loss 1.4943 | val_acc 0.7718 | 221s
+  step  15000 | ep  426.67 | train_loss 0.0206 | val_loss 1.4542 | val_acc 0.7722 | 245s
+  step  16500 | ep  469.33 | train_loss 0.0149 | val_loss 1.4259 | val_acc 0.7886 | 268s
+  step  18000 | ep   512.0 | train_loss 0.0109 | val_loss 1.5563 | val_acc 0.7780 | 291s
+  step  19500 | ep  554.67 | train_loss 0.0113 | val_loss 1.4355 | val_acc 0.7874 | 314s
+  step  21000 | ep  597.33 | train_loss 0.0030 | val_loss 1.5055 | val_acc 0.7930 | 338s
+  step  22500 | ep   640.0 | train_loss 0.0023 | val_loss 1.4376 | val_acc 0.8026 | 361s
+  step  24000 | ep  682.67 | train_loss 0.0002 | val_loss 1.3717 | val_acc 0.8120 | 384s
+  step  25500 | ep  725.33 | train_loss 0.0000 | val_loss 1.4005 | val_acc 0.8116 | 408s
+  step  27000 | ep   768.0 | train_loss 0.0000 | val_loss 1.3898 | val_acc 0.8114 | 431s
+  step  28500 | ep  810.67 | train_loss 0.0000 | val_loss 1.3922 | val_acc 0.8138 | 455s
+  step  30000 | ep  853.33 | train_loss 0.0000 | val_loss 1.3972 | val_acc 0.8124 | 478s
+[done] pilot10__resnet18_w05__basic__f010__s0__lr0.004__st30000 | best val_acc 0.8138 @ step 28500
+--- 4/4 | elapsed 27.3 min ---
+[run] pilot10__resnet18_w05__strong__f010__s0__lr0.004__st30000 | 4500 train imgs | 2,797,610 params | 30000 steps | amp=torch.bfloat16 | workers=8
+  step   1500 | ep   42.67 | train_loss 1.8125 | val_loss 1.1476 | val_acc 0.6132 | 32s
+  step   3000 | ep   85.33 | train_loss 1.4972 | val_loss 0.7058 | val_acc 0.7844 | 59s
+  step   4500 | ep   128.0 | train_loss 1.0971 | val_loss 0.8020 | val_acc 0.7654 | 86s
+  step   6000 | ep  170.67 | train_loss 1.2025 | val_loss 0.6380 | val_acc 0.8084 | 112s
+  step   7500 | ep  213.33 | train_loss 1.0685 | val_loss 0.6409 | val_acc 0.8114 | 138s
+  step   9000 | ep   256.0 | train_loss 1.0304 | val_loss 0.6080 | val_acc 0.8242 | 164s
+  step  10500 | ep  298.67 | train_loss 0.9777 | val_loss 0.6192 | val_acc 0.8270 | 191s
+  step  12000 | ep  341.33 | train_loss 1.1171 | val_loss 0.5989 | val_acc 0.8294 | 216s
+  step  13500 | ep   384.0 | train_loss 0.8834 | val_loss 0.5927 | val_acc 0.8332 | 242s
+  step  15000 | ep  426.67 | train_loss 0.8835 | val_loss 0.5830 | val_acc 0.8416 | 267s
+  step  16500 | ep  469.33 | train_loss 0.9980 | val_loss 0.5840 | val_acc 0.8386 | 293s
+  step  18000 | ep   512.0 | train_loss 0.8884 | val_loss 0.5594 | val_acc 0.8468 | 318s
+  step  19500 | ep  554.67 | train_loss 0.8332 | val_loss 0.5213 | val_acc 0.8484 | 345s
+  step  21000 | ep  597.33 | train_loss 0.9250 | val_loss 0.5594 | val_acc 0.8540 | 370s
+  step  22500 | ep   640.0 | train_loss 0.7458 | val_loss 0.5451 | val_acc 0.8530 | 396s
+  step  24000 | ep  682.67 | train_loss 0.8383 | val_loss 0.5625 | val_acc 0.8568 | 421s
+  step  25500 | ep  725.33 | train_loss 0.7766 | val_loss 0.5116 | val_acc 0.8662 | 447s
+  step  27000 | ep   768.0 | train_loss 0.7864 | val_loss 0.5145 | val_acc 0.8650 | 472s
+  step  28500 | ep  810.67 | train_loss 0.8603 | val_loss 0.4813 | val_acc 0.8692 | 498s
+  step  30000 | ep  853.33 | train_loss 0.9358 | val_loss 0.5118 | val_acc 0.8640 | 523s
+[done] pilot10__resnet18_w05__strong__f010__s0__lr0.004__st30000 | best val_acc 0.8692 @ step 28500
+
+===== 2026-10-30 11:47:49 | python main.py summarize =====
+
+===== 2026-10-30 15:48:42 | python main.py summarize =====
+11 runs -> result\summary.csv

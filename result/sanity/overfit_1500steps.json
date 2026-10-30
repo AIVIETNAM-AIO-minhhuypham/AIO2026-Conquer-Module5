@@ -1,0 +1,23 @@
+{
+  "vit_p4": {
+    "loss_first": 2.4164297580718994,
+    "loss_last": 0.0002475984627380967,
+    "train_acc_end": 1.0,
+    "passed": true,
+    "seconds": 17.250206900003832
+  },
+  "vit_p8": {
+    "loss_first": 2.3693408966064453,
+    "loss_last": 0.00021754639747086912,
+    "train_acc_end": 1.0,
+    "passed": true,
+    "seconds": 16.008167399995727
+  },
+  "resnet18_w05": {
+    "loss_first": 2.383845090866089,
+    "loss_last": 3.2958064002741595e-05,
+    "train_acc_end": 1.0,
+    "passed": true,
+    "seconds": 16.22556349998922
+  }
+}
